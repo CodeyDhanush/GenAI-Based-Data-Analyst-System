@@ -1,0 +1,52 @@
+Upgrade the existing project “AI Data Analyst (GenAI + Data Science)” with the following improvements:
+
+Goal:
+Make the AI Insights fully dynamic — it should automatically analyze the actual uploaded CSV (e.g., BMW data) rather than using built-in or sample summaries.
+
+Required Changes:
+
+1. **Backend (server.js)**  
+   - When the user uploads a CSV, store the parsed DataFrame summary in memory (for example in a global Map using a unique dataset ID).
+   - Each dataset summary should include:
+     - Column names and detected data types
+     - Missing value counts
+     - Basic statistical metrics (mean, median, std, min, max for numeric columns)
+     - Correlation matrix (optional)
+   - Modify the `/api/upload-csv` endpoint to return a unique `datasetId` and store its summary.
+   - Update `/api/generate-insights` endpoint to:
+     - Accept `datasetId`
+     - Retrieve the actual stored dataset summary for that ID
+     - Build the OpenAI prompt dynamically based on that data summary
+     - Send it to OpenAI and return the generated insights
+   - Remove any hardcoded or sample summaries.
+
+2. **Frontend (React / index.html / App.jsx)**  
+   - After uploading a CSV, save the returned `datasetId`.
+   - When the user clicks **“AI Insights”**, send a POST request to `/api/generate-insights` with that `datasetId`.
+   - Display the returned AI insights in the same insights panel dynamically.
+   - If a new CSV is uploaded, replace the old dataset and clear old insights.
+   - Add small text like “Analyzing uploaded dataset...” when generating.
+
+3. **Prompt Structure for OpenAI (inside backend)**  
+   - Replace placeholder text with a real summary, e.g.:
+     ```
+     You are a data analyst. Based on this dataset summary:
+     - Columns: <list>
+     - Data types: <list>
+     - Summary stats: <mean, median, std for each column>
+     - Missing values: <counts>
+     Generate 3 insights and 2 visualization recommendations.
+     ```
+   - Keep temperature around 0.3 for analytical results.
+
+4. **Optional Small Improvements**
+   - Add a short “AI Analyzing…” spinner or loading message on the frontend.
+   - Limit insight requests to once per upload to save tokens.
+   - If the dataset is too large, compute stats only for first 1000 rows.
+
+Expected Result:
+When the user uploads a CSV (like BMW data) and clicks “AI Insights”, the system:
+- Parses and summarizes the real uploaded dataset
+- Sends that summary automatically to OpenAI
+- Returns custom insights that truly describe the BMW dataset characteristics
+- No built-in or dummy summaries are used anymore.

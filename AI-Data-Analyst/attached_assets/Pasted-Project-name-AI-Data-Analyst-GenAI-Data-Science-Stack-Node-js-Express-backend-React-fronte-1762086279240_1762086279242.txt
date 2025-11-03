@@ -1,0 +1,36 @@
+Project name: AI Data Analyst (GenAI + Data Science)
+Stack: Node.js + Express backend, React frontend (single-page), use Danfo.js for data analysis, Plotly.js for charts. Integrate OpenAI (server-side) to produce natural-language insights. Host all in one Replit.
+
+Please create a complete working project with these features:
+- File structure, package.json, and code files for backend and frontend.
+- Backend (Express):
+  - Expose endpoints:
+    - POST /api/upload-csv : accept CSV upload, parse it using danfojs-node, return summary (columns, types, missing counts) and a sample of rows.
+    - POST /api/analyze : accept JSON { csvId, operations } or raw CSV content and return numeric summary stats (mean, median, std, min, max) for requested columns and correlation matrix.
+    - POST /api/generate-insights : accept {summary, topFeatures, questions} and call OpenAI completion (server must read OPENAI_API_KEY from environment) to return textual insights and suggested visualizations.
+  - Use multer for upload handling.
+  - Use danfojs-node (or danfojs) for dataframes in Node.
+  - Use official OpenAI Node client or fetch to call OpenAI; code must be simple to adapt if the user chooses different OpenAI libs.
+
+- Frontend (React, single page):
+  - UI to upload CSV, show preview table, show column list with types and allow selecting columns to analyze.
+  - Buttons: "Summary Stats", "Correlation Matrix", "Auto Insights (GenAI)".
+  - Display numeric tables and interactive charts with Plotly.js (histogram, scatter matrix).
+  - Show GenAI response in a styled card and allow regenerating/asking follow-up questions.
+
+- UX:
+  - Simple deployment-friendly UI (Tailwind or plain CSS). Keep dependencies minimal.
+  - Show loading states and errors.
+  - Expose an .env example showing OPENAI_API_KEY usage.
+
+- Provide inline comments and README with run instructions for Replit.
+
+Create all files and paste full code for:
+  - package.json
+  - server.js (Express)
+  - /client/src/index.html (or public/index.html)
+  - /client/src/App.jsx (React)
+  - /client/src/api.js (fetch helpers)
+  - README.md
+
+Make sure the app runs with `npm install` and `npm run dev` or `node server.js` on Replit. Keep code short but functional and commented.
